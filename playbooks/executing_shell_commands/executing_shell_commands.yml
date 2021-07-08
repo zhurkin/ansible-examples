@@ -1,0 +1,19 @@
+---
+- name: Execution of a simple command
+  hosts: all
+  become: yes
+
+  vars:
+    executing_shell_commands:
+      - echo "Example test command one"
+      - echo "Example test command two"
+
+  tasks:
+     - name: Execution {{ executing_shell_commands }} command
+       shell: "{{ item }}"
+       loop: "{{ executing_shell_commands }}"
+       register: shell_output
+       changed_when: False
+
+     - debug:
+         msg: "{{ shell_output.results|map(attribute='stdout')|list }}"
