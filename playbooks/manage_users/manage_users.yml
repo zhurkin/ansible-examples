@@ -1,0 +1,59 @@
+---
+
+- name: Manage Users
+  hosts: all
+  become: yes
+
+  vars:
+    manage_users:
+      - username: test_manage_user1
+        password: $6$KapSOLkF$jlNVYLmDHrrAyeI42T03Np3VTEV/NdXbR5W47ZTgZjAsQhFyF.wMXDfEHsz6MuAFQOFrwn6lxsjq1VKLgCyNs1
+        update_password: on_create
+
+      - username: test_manage_user2
+        password: $6$ymCFOQfs$nwNPgMtl4whDIGEF/SwGPFD34W2f41E9NakmlX3dhJE6qHExGfmvHQc9hPm/QfvT0r..NK3zjmuyKETA7RI2x.
+        update_password: on_create
+        use_sudo: no
+
+      - username: test_manage_user3
+        user_state: present
+        password: $6$ZtCHPLrg$mKZJg2PceLkSCVAPWiY8rzFlVMFVC9hHnLud54MRZbJH.6nNGPmWV1CPzCJa.HgguiFODkaunGBUpfQfxlpwt/
+        update_password: on_create
+        use_sudo: yes
+        groups: adm
+        uid: 6003
+        comment: Example test manage user 3
+
+  tasks:
+
+    - name: Manage user accounts and  groups
+      user:
+        name:     "{{ item.username }}"
+        password: "{{ item.password }}"
+        comment:  "{{ item.comment | default(omit, True) }}"
+        shell:    "{{ item.shell | default(omit, True) }}"
+        groups:   "{{ item.groups | default(omit,True) }}"
+        system:   "{{ item.system | default(omit,True) }}"
+        uid: "{{ item.uid | default(omit, True) }}"
+        state: "{{ item.user_state | default(omit, True) }}"
+      loop: "{{ manage_users }}"
+
+    - name: Block add or delete file to sudoers.d
+      block:
+
+        - name: Create sudo file
+          copy:
+            dest: "/etc/sudoers.d/10-{{ item.username }}"
+            content: |
+              {{ item.username }}   ALL=(ALL) NOPASSWD:ALL
+            validate: '/usr/sbin/visudo -cf %s'
+          when: ( item.use_sudo|bool == True )
+          loop: "{{ manage_users }}"
+
+        - name: Delete sudo file
+          file:
+            path: "/etc/sudoers.d/10-{{ item.username }}"
+            state: absent
+          when: ( item.use_sudo|bool == False )
+          loop: "{{ manage_users }}"
+      when: ( item.use_sudo is defined )
