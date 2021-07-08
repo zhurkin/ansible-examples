@@ -1,0 +1,36 @@
+---
+
+PH1_APP:
+  hosts:
+    ph1-host-app01p:
+      ansible_host: 10.200.102.11
+    ph1-host-app02p:
+      ansible_host: 10.200.102.12
+    ph1-host-app03p:
+      ansible_host: 10.200.102.13
+
+PH1_DB:
+  hosts:
+    ph1-host-db01p:
+      ansible_host: 10.200.102.15
+    ph1-hosts-db02p:
+      ansible_host: 10.200.102.16
+    ph1-hosts-db03p:
+      ansible_host: 10.200.102.17
+
+PH1_DB_CLUSTER:
+  children:
+     PH1_DB_CLUSTER_MASTER:
+     PH1_DB_CLUSTER_SLAVE:
+
+PH1_DB_CLUSTER_MASTER:
+  hosts:
+    ph1-host-db01d:
+      ansible_host: 10.200.102.15
+
+PH1_DB_CLUSTER_SLAVE:
+  hosts:
+    ph1-hosts-db02p:
+      ansible_host: 10.200.102.16
+    ph1-hosts-db03p:
+      ansible_host: 10.200.102.17

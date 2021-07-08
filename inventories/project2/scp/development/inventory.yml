@@ -1,0 +1,36 @@
+---
+
+LV1_APP:
+  hosts:
+    lv1-host-app01s:
+      ansible_host: 10.110.10.21
+    lv1-host-app02s:
+      ansible_host: 10.110.10.22
+    lv1-host-app03s:
+      ansible_host: 10.110.10.23
+
+LV1_DB:
+  hosts:
+    lv1-host-db01s:
+      ansible_host: 10.110.10.25
+    lv1-hosts-db02s:
+      ansible_host: 10.110.10.26
+    lv1-hosts-db03s:
+      ansible_host: 10.110.10.27
+
+LV1_DB_CLUSTER:
+  children:
+     LV1_DB_CLUSTER_MASTER:
+     LV1_DB_CLUSTER_SLAVE:
+
+LV1_DB_CLUSTER_MASTER:
+  hosts:
+    lv1-host-db01s:
+      ansible_host: 10.110.10.25
+
+LV1_DB_CLUSTER_SLAVE:
+  hosts:
+    lv1-hosts-db02s:
+      ansible_host: 10.110.10.26
+    lv1-hosts-db03s:
+      ansible_host: 10.110.10.27
