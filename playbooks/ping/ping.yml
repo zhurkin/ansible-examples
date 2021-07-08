@@ -1,0 +1,14 @@
+---
+
+- name: Ping
+  hosts: all
+  gather_facts: false
+
+  vars:
+    ping_count: 1
+
+  tasks:
+     
+     - name: Pinging Host
+       ansible.builtin.ping:
+       with_sequence: count="{{ ping_count }}"
