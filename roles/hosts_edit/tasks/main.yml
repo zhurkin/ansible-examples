@@ -1,0 +1,10 @@
+---
+
+- name: Create {{ hosts_edit.hosts_file }} file
+  template:
+    src:    "{{ hosts_edit.template_file }}"
+    dest:   "{{ hosts_edit.hosts_file }}"
+    owner:  "{{ hosts_edit.owner }}"
+    group:  "{{ hosts_edit.group }}"
+    mode:   "{{ hosts_edit.mode }}"
+    backup: "{{ hosts_edit_backup | default('no') }}"

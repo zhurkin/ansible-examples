@@ -1,0 +1,8 @@
+---
+
+hosts_edit:
+  hosts_file: /etc/hosts
+  template_file: defaults/hosts.j2
+  owner: root
+  group: root
+  mode: 0644

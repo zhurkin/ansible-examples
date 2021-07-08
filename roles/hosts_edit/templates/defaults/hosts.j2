@@ -1,0 +1,15 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+#automatic generation hostname
+{% for host in play_hosts %}
+{{ hostvars[host]['ansible_default_ipv4']['address'] }} {{ hostvars[host]['ansible_nodename'] }} {{ hostvars[host]['ansible_hostname'] }}
+{% endfor %}
+
+{% if hosts_edit_hostname is defined %}
+{% for config in hosts_edit_hostname %}
+{% for key, value in config.items() %}
+{{ key }} {{ value }}
+{% endfor %}
+{% endfor %}
+{% endif %}
