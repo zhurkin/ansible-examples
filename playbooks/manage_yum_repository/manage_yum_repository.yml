@@ -1,0 +1,26 @@
+---
+
+- name: Manage yum repository
+  hosts: all
+  become: yes
+
+  vars:
+    manage_yum_repository: []
+    manage_yum_repository_other: []
+
+  tasks:
+
+    - name: Manage yum repository
+      yum_repository:
+        name:     "{{ item.name }}"
+        baseurl:  "{{ item.baseurl }}"
+        description: "{{ item.description | default(omit, True) }}"
+        gpgkey:   "{{ item.gpgkey | default(omit, True) }}"
+        gpgcheck: "{{ item.gpgcheck | default('no') }}"
+        repo_gpgcheck: "{{ item.repo_gpgcheck | default(omit, True) }}"
+        state: "{{ item.state | default('present') }}"
+        username: "{{ item.username | default(omit, True) }}"
+        password: "{{ item.password | default(omit, True) }}"
+        file: "{{ item.file | default(omit, True) }}"
+        enabled: "{{ item.enabled | default('yes') }}"
+      loop: "{{ ( manage_yum_repository | default([]) ) + ( manage_yum_repository_other | default([]) ) }}"
